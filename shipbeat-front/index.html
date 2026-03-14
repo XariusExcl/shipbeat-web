@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shipbeat-front</title>
+  <link href="/src/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app" class="h-screen w-full absolute top-0 -z-1"></div>
+  <div id="window"
+    class="flex flex-col items-center absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-240 h-160 bg-sky-950/40 border-sky-300/60 border-4 shadow-sky-950 inset-shadow[0_35px_35px_sky-300/40] shadow-2xl rounded-xl">
+    <div id="sb_logo" class="relative w-96 top-1/2">
+      <img id="logo_ship" src="ship.svg" class="aos absolute -left-10 -top-16 h-14 opacity-0" />
+      <img id="logo_beat" src="beat.svg" class="aos absolute left-10 h-14 opacity-0" />
+      <span id="logo_osver" class="aos text-xs absolute -bottom-18 right-0 opacity-0">OS version v0.1-fix</span>
+    </div>
+    <div id="mainMenu" class="menu hiddenMenu flex flex-col items-start shrink-0">
+      <button type="button" onclick="changeMenu('mainMenu','loginMenu')">> Se connecter</button>
+      <button type="button" onclick="changeMenu('mainMenu','mapsMenu')">> Missions disponibles</button>
+      <button type="button" onclick="changeMenu('mainMenu','pilotsMenu')">> Classement des pilotes</button>
+    </div>
+    <div id="loginMenu" class="menu hiddenMenu">
+      LoginMenu
+      <button type="button" onclick="changeMenu('loginMenu','mainMenu')">> Retour</button>
+    </div>
+    <div id="mapsMenu" class="menu hiddenMenu">
+      MapsMenu
+      <button type="button" onclick="changeMenu('mapsMenu','mainMenu')">> Retour</button>
+    </div>
+    <div id="pilotsMenu" class="menu hiddenMenu">
+      PilotsMenu
+      <button type="button" onclick="changeMenu('pilotsMenu','mainMenu')">> Retour</button>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

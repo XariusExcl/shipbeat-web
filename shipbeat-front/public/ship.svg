@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 686 105" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Plan-de-travail1" serif:id="Plan de travail1" transform="matrix(0.67329,0,0,0.650062,208.371602,-15.568672)">
+        <rect x="-309.483" y="23.95" width="1018.668" height="160.023" style="fill:none;"/>
+        <clipPath id="_clip1">
+            <rect x="-309.483" y="23.95" width="1018.668" height="160.023"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <g transform="matrix(1.485245,0,0,1.538315,-1477.736144,-421.606684)">
+                <path d="M806.815,289.831L985.481,289.831L979.348,320.765L836.415,320.765L834.548,329.831L977.748,329.831L964.681,396.498L786.015,396.498L792.148,365.565L935.081,365.565L936.681,356.498L794.015,356.498L806.815,289.831Z" style="fill:white;fill-rule:nonzero;"/>
+                <path d="M1159.881,289.831L1195.615,289.831L1174.815,396.498L1138.815,396.498L1146.815,356.498L1039.615,356.498L1031.881,396.498L996.148,396.498L1016.948,289.831L1052.681,289.831L1044.681,329.831L1151.881,329.831L1159.881,289.831Z" style="fill:white;fill-rule:nonzero;"/>
+                <path d="M1227.081,289.831L1262.815,289.831L1241.748,396.498L1206.281,396.498L1227.081,289.831Z" style="fill:white;fill-rule:nonzero;"/>
+                <path d="M1294.548,289.831L1472.948,289.831L1459.881,356.498L1316.948,356.498L1309.215,396.498L1273.481,396.498L1294.548,289.831ZM1429.481,329.831L1431.081,320.765L1323.881,320.765L1322.281,329.831L1429.481,329.831Z" style="fill:white;fill-rule:nonzero;"/>
+            </g>
+        </g>
+    </g>
+</svg>
