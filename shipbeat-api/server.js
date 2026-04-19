@@ -72,6 +72,12 @@ Score.init({
   rank: DataTypes.CHAR,
 }, { sequelize, modelName: 'score' });
 
+// Define associations
+Score.belongsTo(Player, { foreignKey: 'playerId' });
+Score.belongsTo(Song, { foreignKey: 'songId' });
+Player.hasMany(Score, { foreignKey: 'playerId' });
+Song.hasMany(Score, { foreignKey: 'songId' });
+
 // Sync models with database
 sequelize.sync();
 
@@ -100,17 +106,37 @@ app.get('/players/:name', async (req, res) => {
   res.json(player);
 });
 
-/*
-app.post('/players', async (req, res) => {
-  if(authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
-  const player = await Player.create(req.body);
-  res.json(player);
-});
-*/
-
 app.get('/songs', async (req, res) => {
   const songs = await Song.findAll();
   res.json(songs);
+});
+
+app.get('/scores/song/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid song id.' });
+
+  const scores = await Score.findAll({
+    where: { songId: id },
+    include: {
+      model: Player,
+      attributes: ['name']
+    },
+    order: [['score', 'DESC']],
+    limit: 20
+  });
+
+  res.json({scores: scores});
+});
+
+app.get('/scores/player/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid player id.' });
+
+  const scores = await Score.findAll({
+    where: { playerId: id }
+  });
+
+  res.json({scores: scores});
 });
 
 app.post('/songs', async (req, res) => {
@@ -143,13 +169,14 @@ app.post('/songs', async (req, res) => {
     }
     results.songs.push(song);
   }
-
   res.json(results);
 });
 
 app.post('/songs/play/:id', async (req, res) => {
   if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
-  const id = req.params.id;
+  const id = parseInt(req.params.id, 10);
+  if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid song id.' });
+
   let song = await Song.findOne({ where: { id } });
   if (song) {
     const playCount = ++song.playCount;
@@ -163,10 +190,13 @@ app.post('/songs/play/:id', async (req, res) => {
 
 app.post('/songs/clear/:id', async (req, res) => {
   if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
-  const id = req.params.id;
+  const id = parseInt(req.params.id, 10);
+  if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid player id.' });
+
   const { PlayerID, Score: playScore, MaxCombo, Perfects, Goods, Bads, Misses, Percentage, Rank } = req.body;
   let song = await Song.findOne({ where: { id } });
   let player = await Player.findOne({ where: { id: PlayerID } });
+
   if (song && player) {
     const clearCount = ++song.clearCount;
     let score = await Score.findOne({ where: { songId: id, playerId: PlayerID } })
