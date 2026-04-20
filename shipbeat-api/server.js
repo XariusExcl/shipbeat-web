@@ -125,7 +125,7 @@ app.get('/scores/song/:id', async (req, res) => {
     limit: 20
   });
 
-  res.json({scores: scores});
+  res.json({ scores: scores });
 });
 
 app.get('/scores/player/:id', async (req, res) => {
@@ -136,7 +136,7 @@ app.get('/scores/player/:id', async (req, res) => {
     where: { playerId: id }
   });
 
-  res.json({scores: scores});
+  res.json({ scores: scores });
 });
 
 app.post('/songs', async (req, res) => {
@@ -199,10 +199,18 @@ app.post('/songs/clear/:id', async (req, res) => {
 
   if (song && player) {
     const clearCount = ++song.clearCount;
+    let isPersonalHighscore, isCabHighscore = false;
     let score = await Score.findOne({ where: { songId: id, playerId: PlayerID } })
-    if (score) { // Existing score
+    const bestScore = await Score.findOne({ where: { songId: id }, order: [['score', 'DESC']] });
+
+    if (bestScore) { // Existing score
+      isCabHighscore = playScore > bestScore.score;
+    }
+
+    if (score) { // Existing personal score
       const scoreDiff = playScore - score.score;
       if (scoreDiff <= 0) { res.json({ totalScore: player.totalScore }); return; } // Score was not beaten, don't save
+      isPersonalHighscore = true;
       await score.update({
         score: playScore,
         bestCombo: MaxCombo,
@@ -237,7 +245,7 @@ app.post('/songs/clear/:id', async (req, res) => {
       clearCount
     })
 
-    res.json({ totalScore: player.totalScore });
+    res.json({ totalScore: player.totalScore, isPersonalHighscore, isCabHighscore });
   } else {
     res.status(404).json({ message: 'Song not found.' });
   }
