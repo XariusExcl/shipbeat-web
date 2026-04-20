@@ -9,7 +9,7 @@ const app = express();
 const port = 3443;
 
 const authenticateRequest = (req) => {
-  const { secret } = req.body;
+  const { secret } = req.query;
   return (secret == process.env.SECRET);
 }
 
@@ -20,17 +20,16 @@ const sequelize = new Sequelize({
 });
 
 // Create data models
-class Player extends Model { }
+class Player extends Model {}
 Player.init({
   name: DataTypes.STRING,
   totalScore: DataTypes.BIGINT,
 }, { sequelize, modelName: 'player' });
 
-class Score extends Model { }
+class Score extends Model {}
 Score.init({
-  timestamp: DataTypes.DATE,
   score: DataTypes.INTEGER,
-  maxCombo: DataTypes.INTEGER,
+  bestCombo: DataTypes.INTEGER,
   perfects: DataTypes.INTEGER,
   goods: DataTypes.INTEGER,
   bads: DataTypes.INTEGER,
@@ -39,7 +38,7 @@ Score.init({
   rank: DataTypes.CHAR,
 }, { sequelize, modelName: 'score' });
 
-class Song extends Model { }
+class Song extends Model {}
 Song.init({
   title: DataTypes.STRING,
   artist: DataTypes.STRING,
@@ -65,8 +64,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/players/leaderboard/:page', async (req, res) => {
-  const page = req.params.page ?? 1;
-  const player = await Player.findAll({
+  const page = req.params.page ?? 1; 
+  const player = await 
+  Player.findAll({
     order: [['totalScore', 'DESC']],
     limit: 50,
     offset: (page - 1) * 50
@@ -81,48 +81,46 @@ app.get('/players/:name', async (req, res) => {
 });
 
 app.post('/players', async (req, res) => {
-  if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
+  if(authenticateRequest(req) == false) return res.status(501).json({ message: 'request is not authenticated.' });
   const player = await Player.create(req.body);
   res.json(player);
 });
 
 app.get('/songs', async (req, res) => {
   const songs = await Song.findAll();
-  res.json(songs);
+  res.json(songs); 
 });
 
 app.post('/songs', async (req, res) => {
-  if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
-  req.body.songs.forEach(async (s) => {
-    const { title: Title, artist: Artist, creator: Creator, bpm: BPM, length: Length, difficultyName: DifficultyName, difficultyRating: DifficultyRating, noteCount: NoteCount } = s;
-    let song = await Song.findOne({ where: { title: Title, difficultyName: DifficultyName } });
-    if (song) {
-      await song.update({
-        length: Length,
-        difficultyRating: DifficultyRating,
-        noteCount: NoteCount
-      });
-      res.json(song);
-    } else {
-      song = await Song.create({
-        title: Title,
-        artist: Artist,
-        creator: Creator,
-        bpm: BPM,
-        length: Length,
-        difficultyName: DifficultyName,
-        difficultyRating: DifficultyRating,
-        noteCount: NoteCount,
-        playCount: 0,
-        clearCount: 0
-      });
-      res.json(song);
-    }
-  });
+  if(authenticateRequest(req) == false) return res.status(501).json({ message: 'request is not authenticated.' });
+  const { title, artist, creator, bpm, length, difficultyName, difficultyRating, noteCount } = req.body;
+  let song = await Song.findOne({ where: { title, difficultyName } });
+  if (song) {
+    await song.update({
+      length,
+      difficultyRating,
+      noteCount
+    });
+    res.json(song);
+  } else {
+    song = await Song.create({
+      title,
+      artist,
+      creator,
+      bpm,
+      length,
+      difficultyName,
+      difficultyRating,
+      noteCount,
+      playCount: 0,
+      clearCount: 0
+    });
+    res.json(song);
+  }
 });
 
 app.post('/songs/play/:id', async (req, res) => {
-  if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
+  if(authenticateRequest(req) == false) return res.status(501).json({ message: 'request is not authenticated.' });
   let song = await Song.findOne({ where: { title, difficultyName } });
   if (song) {
     const playCount = ++song.playCount;
@@ -130,21 +128,20 @@ app.post('/songs/play/:id', async (req, res) => {
       playCount
     })
   } else {
-    res.status(404).json({ message: 'Song not found.' });
+    res.status(404).json({ message: 'Song not found.'});
   }
 });
 
 app.post('/songs/clear/:id', async (req, res) => {
-  if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
+  if(authenticateRequest(req) == false) return res.status(501).json({ message: 'request is not authenticated.' });
   let song = await Song.findOne({ where: { title, difficultyName } });
   if (song) {
     const clearCount = ++song.clearCount;
     await song.update({
       clearCount
     })
-    // TODO : Score ?, check if highscore and send updated total score back 
   } else {
-    res.status(404).json({ message: 'Song not found.' });
+    res.status(404).json({ message: 'Song not found.'});
   }
 });
 
