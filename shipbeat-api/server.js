@@ -176,12 +176,17 @@ app.post('/songs/play/:id', async (req, res) => {
   if (authenticateRequest(req) == false) return res.status(401).json({ message: 'request is not authenticated.' });
   const id = parseInt(req.params.id, 10);
   if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid song id.' });
+  const { PlayerID } = req.body;
 
   let song = await Song.findOne({ where: { id } });
+  let player = await Player.findOne({ where: { id: PlayerID } });
+
   if (song) {
-    const playCount = ++song.playCount;
     await song.update({
-      playCount
+      playCount: song.playCount + 1
+    })
+    await player.update({
+      playCount: player.playCount + 1
     })
   } else {
     res.status(404).json({ message: 'Song not found.' });
