@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inconsolata", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -114,7 +114,11 @@ body, html {
 button {
   transition: all;
   transition-duration: 50ms;
-  @apply min-w-48 p-4 m-2 text-xl rounded-2xl text-white bg-sky-300/10 hover:bg-sky-300/30 hover:shadow-xl hover:shadow-sky-950 border-4 border-transparent hover:border-sky-300
+  @apply text-gray-500 min-w-48 p-4 m-2 text-xl rounded-2xl  bg-sky-300/10 border-4 border-transparent
+}
+
+button:not(.disabled) {
+  @apply text-white hover:bg-sky-300/30 hover:shadow-xl hover:shadow-sky-950 hover:border-sky-300
 }
 
 p {
@@ -125,10 +129,14 @@ p {
   transition: all;
   transition-duration: 200ms;
   transition-delay: 250ms;
-  @apply absolute p-4 pt-32 w-full origin-center
+  @apply absolute p-4 pt-36 w-full h-full origin-center
 }
 
 .hiddenMenu {
   transition-delay: 0ms;
   @apply opacity-0 -z-10 scale-75
+}
+
+.songEntry {
+  @apply flex flex-col p-4 m-2 text-xl rounded-2xl text-white hover:bg-sky-300/30 hover:shadow-xl hover:shadow-sky-950  bg-sky-300/10
 }

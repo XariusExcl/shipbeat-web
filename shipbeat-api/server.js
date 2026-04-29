@@ -1,13 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const { loadEnvFile } = require('node:process');
-const { totalmem } = require('node:os');
 
 loadEnvFile();
 
 const app = express();
 const port = 3443;
+app.use(cors())
 
 const authenticateRequest = (req) => {
   const authHeader = req.headers.authorization;
@@ -89,7 +90,7 @@ app.get('/', (req, res) => {
   res.send("TUT-0 was here •ω•")
 });
 
-app.get('/players/leaderboard/:page', async (req, res) => {
+app.get('/leaderboards/players/:page', async (req, res) => {
   const page = req.params.page ?? 1;
   const player = await
     Player.findAll({

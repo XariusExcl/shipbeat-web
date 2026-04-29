@@ -1,8 +1,8 @@
 import './style.css'
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+// import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const loader = new GLTFLoader();
+// const loader = new GLTFLoader();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -63,11 +63,15 @@ const observer = new IntersectionObserver((entries) => {
   });
 });
 
+fetchPilotData();
+fetchMapData();
+
 window.onload = function() {
   document.querySelectorAll('.aos').forEach((element) => {
     observer.observe(element);
   });
-  this.setInterval(() => {
+  
+  this.setTimeout(() => {
     menus.mainMenu.classList.remove('hiddenMenu');
   }, 2500)
 }
@@ -85,4 +89,59 @@ function changeMenu(menuToExit, menuToOpen) {
   menus[menuToOpen].classList.remove('hiddenMenu');
 }
 
+async function fetchPilotData()
+{
+  try {
+    const response = await fetch("http://localhost:3443/leaderboards/players/1")
+    if (!response.ok) throw new Error(`Response status: ${response.status}`);
+    const result = await response.json();
+    const table = document.getElementById("pilotsData");
+    let i = 1;
+    result.forEach((player) => {
+      const tr = document.createElement("div");
+      tr.classList.add("flex");
+      tr.innerHTML = `
+        <div class="w-2/12 text-xl">#${i++}</div>
+        <div class="w-4/12">${player.name}</div>
+        <div class="w-2/12">${player.playCount}</div>
+        <div class="w-4/12">${formatScore(player.totalScore)}</div>
+      `;
+      table.appendChild(tr);
+    })
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
+async function fetchMapData()
+{
+  try {
+    const response = await fetch("http://localhost:3443/songs")
+    if (!response.ok) throw new Error(`Response status: ${response.status}`);
+    const result = await response.json();
+    const table = document.getElementById("mapData");
+    result.forEach((map) => {
+      const tr = document.createElement("div")
+      tr.classList.add("songEntry");
+      tr.innerHTML = `
+        <div>${map.title}</div>
+        <div>${map.artist}</div>
+        <div>${map.creator}</div>
+        <div>${map.difficultyName} (${map.difficultyRating}★) </div>
+        <div>${map.playCount}</div>
+      `;
+      table.appendChild(tr);
+    })
+
+  } catch (error) {
+    console.error(error.message);
+  }
+} 
+
+function formatScore(score)
+{
+  return (score / 1000000).toFixed(3) + ' M';
+}
+
 window.changeMenu = changeMenu;
+window.fetchPilotData = fetchPilotData;

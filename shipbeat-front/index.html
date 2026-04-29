@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>shipbeat-front</title>
   <link href="/src/style.css" rel="stylesheet">
@@ -19,7 +21,7 @@
       <span id="logo_osver" class="aos text-xs absolute -bottom-18 right-0 opacity-0">OS version v0.1-fix</span>
     </div>
     <div id="mainMenu" class="menu hiddenMenu flex flex-col items-start shrink-0">
-      <button type="button" onclick="changeMenu('mainMenu','loginMenu')">> Se connecter</button>
+      <button type="button" onclick="" class="disabled">> Se connecter (indisponible)</button>
       <button type="button" onclick="changeMenu('mainMenu','mapsMenu')">> Missions disponibles</button>
       <button type="button" onclick="changeMenu('mainMenu','pilotsMenu')">> Classement des pilotes</button>
     </div>
@@ -27,13 +29,37 @@
       LoginMenu
       <button type="button" onclick="changeMenu('loginMenu','mainMenu')">> Retour</button>
     </div>
-    <div id="mapsMenu" class="menu hiddenMenu">
-      MapsMenu
-      <button type="button" onclick="changeMenu('mapsMenu','mainMenu')">> Retour</button>
+    <div id="mapsMenu" class="menu hiddenMenu grid grid-rows-2" style="grid-template-rows: 82% 18%;">
+      <div class="px-3 w-full h-full flex flex-col text-center">
+        <div class="overflow-y-scroll grid grid-cols-3" id="mapData">
+        </div>
+      </div>
+      <div>
+        <button type="button" onclick="changeMenu('mapsMenu','mainMenu')">> Retour</button>
+      </div>
     </div>
-    <div id="pilotsMenu" class="menu hiddenMenu">
-      PilotsMenu
-      <button type="button" onclick="changeMenu('pilotsMenu','mainMenu')">> Retour</button>
+    <div id="pilotsMenu" class="menu hiddenMenu grid grid-rows-2" style="grid-template-rows: 82% 18%;">
+      <div class="px-12 w-full h-full flex flex-col text-center">
+        <div class="flex font-bold text-xl">
+          <div class="w-2/12">
+            Rang
+          </div>
+          <div class="w-4/12">
+            Nom
+          </div>
+          <div class="w-2/12">
+            Missions
+          </div>
+          <div class="w-4/12">
+            Points de pilote
+          </div>
+        </div>
+        <div class="text-lg overflow-y-scroll" id="pilotsData">
+        </div>
+      </div>
+      <div>
+        <button type="button" onclick="changeMenu('pilotsMenu','mainMenu')">> Retour</button>
+      </div>
     </div>
   </div>
   <script type="module" src="/src/main.js"></script>
