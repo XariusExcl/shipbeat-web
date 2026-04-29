@@ -8,7 +8,12 @@ loadEnvFile();
 
 const app = express();
 const port = 3443;
-app.use(cors())
+app.use(cors({
+  origin: true, // Allow requests from any origin (todo: ?)
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}))
 
 const authenticateRequest = (req) => {
   const authHeader = req.headers.authorization;
